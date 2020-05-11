@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.TilePane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controleur.JeuControleur">
+   <center>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="896.0" prefWidth="896.0" BorderPane.alignment="CENTER">
+         <children>
+            <TilePane fx:id="terrain" prefHeight="896.0" prefWidth="896.0" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

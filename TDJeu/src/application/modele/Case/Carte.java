@@ -1,4 +1,4 @@
-package modele;
+package application.modele.Case;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,19 +6,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import application.modele.Case.Planche;
+
+
 public class Carte {
 
-	//private ObservableList<> obsListe = FXCollections.observableArrayList();
+	private ObservableList<Case> obsListe = FXCollections.observableArrayList();
 	
 	private int largeur;
 	
 	public Carte() {
 		
 	}
-	/*public Carte(ObservableList<> obliste) {
+	
+	public Carte(ObservableList<Case> obliste) {
 		this.obsListe = obliste;
 
-	}*/
+	}
 
 
 	public void lectureFichier() {
@@ -42,8 +48,6 @@ public class Carte {
 					valeur = map[i];
 					creeTerrain(valeur);
 				}
-				
-
 			}
 
 		} catch (FileNotFoundException e) {
@@ -67,29 +71,41 @@ public class Carte {
 
 
 	public void creeTerrain(String valeur) {
-		/*if (Integer.parseInt(valeur) == 0) {
-			block = new Air();
-			obsListe.add(block);
-		}
-		if (Integer.parseInt(valeur) == 1) {
-			block = new Herbe();
-			obsListe.add(block);
-		}
-		if (Integer.parseInt(valeur) == 2) {
-			block = new Terre();
-			obsListe.add(block);
-		}
-		if (Integer.parseInt(valeur) == 3) {
-			block = new Pierre();
-			obsListe.add(block);
-		}*/
+		Case b;
+			switch(Integer.parseInt(valeur)) {
+			  case 248:
+				  b = new SolsMonstre();
+			    break;
+			  case 100:
+				  b = new Parcours();
+				    break;
+			  case 40:
+				  b = new EmplacementTourelle();
+				    break;
+			  case 21:
+				  b = new MurNord();
+				    break;
+			  case 59:
+				  b = new MurSud();
+				    break;
+			  case 41:
+				  b = new MurEst();
+				    break;
+			  case 39:
+				  b = new MurOuest();
+				    break;
+			  case 401:
+				  b = new Facade();
+				    break;
+			  default:
+				  b = new Planche();
+			}
+		obsListe.add(b);
 	}
 
 
-
-	/*public ObservableList<Blocks> getListe() {
+	public ObservableList<Case> getListe() {
 		return obsListe;
-		
 	}
 
 	public int getLargeur() {
@@ -99,38 +115,11 @@ public class Carte {
 	public int getHauteur() {
 		return this.obsListe.size() / this.largeur;
 	}
-
-	public Blocks supprimerBlock(int x, int y) {
-		
-		Blocks bloc = changerBlockAir(x,y);
-		return bloc;
-	}
-	public int indiceDellBlock(int x , int y) {
-		return(int) (y/32)*100+(x/32);
-		  
-	}
 	
-	public void ajouterBlock(int x, int y, int id, Slot slot) {
-		switch (id) {
-		case 1:
-			slot.enleveStock();
-			obsListe.set(indiceDellBlock(x,y), new Herbe());
-			break;
-		case 2:
-			slot.enleveStock();
-			obsListe.set(indiceDellBlock(x,y), new Terre());
-			break;
-		case 3:
-			slot.enleveStock();
-			obsListe.set(indiceDellBlock(x,y), new Pierre());
-		break;
-		default:
-			break;
-		}
-		
-		
-	}
-	// Renvoie l'indice du block dans la liste observable 
+	
+	//Renvoie l'indice du block dans la liste observable 
+	
+	/*
 	public int Indice(int x , int y) {
 		return(int) (y/32+1)*100+(x/32+1);
 			
