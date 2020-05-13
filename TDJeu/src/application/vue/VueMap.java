@@ -4,7 +4,7 @@ import application.modele.Jeu;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 
-public class VueMap extends TilePane{
+public class VueMap {
 	
 	private TilePane terrain;
 	
@@ -56,5 +56,40 @@ public class VueMap extends TilePane{
 			
 			terrain.getChildren().add(img);
 		}
+	}
+	
+	public void refreshCurrentCase(int indice, int idTourelle, int orientation) {
+		ImageView img = new ImageView("file:src/assets/BlockTour.png");;
+		switch (idTourelle) {
+		case 1:
+			img = new ImageView("file:src/assets/tower1.png");
+			break;
+		case 2:
+			img = new ImageView("file:src/assets/tower2.png");
+			break;
+		case 3:
+			img = new ImageView("file:src/assets/tower3.png");
+			break;
+		}
+		img.setRotate(this.getRotationAngleImage(orientation));
+		terrain.getChildren().set(indice, img);
+	}
+	
+	public int getRotationAngleImage(int orientation) {
+		int angle = 0;
+		switch (orientation) {
+		case 2:
+			angle = 90;
+			break;
+		case 3:
+			angle = 180;
+			break;
+		case 4:
+			angle = 270;
+			break;
+		default:
+			break;
+		}
+		return angle;
 	}
 }

@@ -17,9 +17,7 @@ public class Carte {
 	
 	private int largeur;
 	
-	public Carte() {
-		
-	}
+	public Carte() {}
 	
 	public Carte(ObservableList<Case> obliste) {
 		this.obsListe = obliste;
@@ -32,6 +30,7 @@ public class Carte {
 		BufferedReader buffuredReader = null;
 		int compteur = 0;
 
+		
 		try {
 			FileReader fileReader = new FileReader(file);
 			buffuredReader = new BufferedReader(fileReader);
@@ -103,7 +102,6 @@ public class Carte {
 		obsListe.add(b);
 	}
 
-
 	public ObservableList<Case> getListe() {
 		return obsListe;
 	}
@@ -116,26 +114,8 @@ public class Carte {
 		return this.obsListe.size() / this.largeur;
 	}
 	
-	
 	//Renvoie l'indice du block dans la liste observable 
-	
-	/*
 	public int Indice(int x , int y) {
-		return(int) (y/32+1)*100+(x/32+1);
-			
+		return(int) (y/32)*28+(x/32);	
 	}
-	
-	public Blocks changerBlockAir(int x , int y) {
-		return obsListe.set(indiceDellBlock(x, y), new Air());
-	}
-	
-	public Blocks recupIdBlock(Blocks b) {
-		for (int i = 0 ; i < obsListe.size() ; i++) {
-			if (obsListe.get(i).getId()== b.getId()) {
-				return obsListe.get(i);
-			}
-		}
-		return null;
-	}
-	*/
 }

@@ -12,14 +12,18 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("vue/vue.fxml"));
-			Scene scene = new Scene(root,1500,896);
+			
+			Scene scene = new Scene(root,896,1000);
 			scene.getStylesheets().add(getClass().getResource("vue/application.css").toExternalForm());
+			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			root.requestFocus();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);

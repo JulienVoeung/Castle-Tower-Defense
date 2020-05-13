@@ -7,8 +7,8 @@ public abstract class Case{
 	private int id;
 
 	public Case(String nomBlock, int id, boolean traversable) {
-		this.nom=nom;
-		this.id=id;
+		this.nom = nomBlock;
+		this.id = id;
 		this.traversable = traversable;
 	}
 
