@@ -1,18 +1,24 @@
 package application.vue;
 
 import application.modele.Jeu;
+import application.modele.Case.Case;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
+import javafx.collections.ListChangeListener;
 
-public class VueMap {
+
+public class VueMap implements ListChangeListener<Case>  {
 	
 	private TilePane terrain;
 	
 	private Jeu jeu;
 	
+	private int angle;
+	
 	public VueMap(Jeu jeu, TilePane terrain) {
 		this.jeu=jeu;
 		this.terrain=terrain;
+		this.angle=0;
 	}
 	
 	/***
@@ -32,13 +38,11 @@ public class VueMap {
 			  case 40:
 				  img = new ImageView("file:src/assets/BlockTour.png");
 				    break;
-			
 			  case 21:
 				  img = new ImageView("file:src/assets/MurNord.png");
 				    break;
 			  case 59:
 				  img = new ImageView("file:src/assets/MurGauche.png");
-				  
 				    break;
 			  case 41:
 				  img = new ImageView("file:src/assets/MurDroite.png");
@@ -46,7 +50,6 @@ public class VueMap {
 			  case 39:
 				  img = new ImageView("file:src/assets/MurSud.png");
 				    break;
-			 
 			  case 401:
 				  img = new ImageView("file:src/assets/FacadeMur.png");
 				    break;
@@ -58,38 +61,45 @@ public class VueMap {
 		}
 	}
 	
-	public void refreshCurrentCase(int indice, int idTourelle, int orientation) {
-		ImageView img = new ImageView("file:src/assets/BlockTour.png");;
-		switch (idTourelle) {
-		case 1:
-			img = new ImageView("file:src/assets/tower1.png");
-			break;
-		case 2:
-			img = new ImageView("file:src/assets/tower2.png");
-			break;
-		case 3:
-			img = new ImageView("file:src/assets/tower3.png");
-			break;
-		}
-		img.setRotate(this.getRotationAngleImage(orientation));
-		terrain.getChildren().set(indice, img);
+	@Override
+	public void onChanged(Change<? extends Case> e) {
+		ImageView img = new ImageView("file:src/assets/BlockTour.png");
+		while (e.next()) {
+			if(e.wasReplaced()) {
+				
+				switch (jeu.getMap().getListe().get(e.getFrom()).getId()) {
+				case 1:
+					img = new ImageView("file:src/assets/tower1.png");
+					break;
+				case 2:
+					img = new ImageView("file:src/assets/tower2.png");
+					break;
+				case 3:
+					img = new ImageView("file:src/assets/tower3.png");
+					break;
+				}
+			}
+			img.setRotate(this.angle);
+			terrain.getChildren().set(e.getFrom(), img);
+		}	
 	}
 	
-	public int getRotationAngleImage(int orientation) {
-		int angle = 0;
+	public void setRotationAngleImage(int orientation) {
+		int currentAngle = 0;
 		switch (orientation) {
 		case 2:
-			angle = 90;
+			currentAngle = 90;
 			break;
 		case 3:
-			angle = 180;
+			currentAngle = 180;
 			break;
 		case 4:
-			angle = 270;
+			currentAngle = 270;
 			break;
 		default:
 			break;
 		}
-		return angle;
+		this.angle=currentAngle;
 	}
+
 }

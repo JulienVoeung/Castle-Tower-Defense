@@ -50,7 +50,7 @@ public class Carte {
 			}
 
 		} catch (FileNotFoundException e) {
-			System.err.printf("Le fichier %s n'a pas ete trouve , la map ne peut �tre charg�e.", file.toString());
+			System.err.printf("Le fichier %s n'a pas ete trouve , la map ne peut pu etre charge.", file.toString());
 		} catch (IOException e) {
 			System.err.println("Impossible de lire le fichier");
 		}

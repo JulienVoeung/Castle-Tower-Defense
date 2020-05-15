@@ -8,10 +8,10 @@ import application.modele.Jeu;
 import application.modele.Case.Case;
 import application.modele.tourelle.Slots;
 import application.modele.tourelle.Tourelle;
-import application.vue.VueInterface;
 import application.vue.VueMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -23,10 +23,9 @@ import javafx.util.Duration;
 
 
 public class JeuControleur implements Initializable {
-
+	
 	private Jeu jeu;
 	private VueMap vue;
-	private VueInterface vueInterface;
 	
 	@FXML
 	private Timeline gameLoop;
@@ -34,23 +33,22 @@ public class JeuControleur implements Initializable {
 	
 	@FXML
 	private TilePane terrain;
-		
 	
 	@FXML
     private ImageView slot1;
-
+	
     @FXML
     private ImageView slot2;
-
+    
     @FXML
     private ImageView slot3;
-
+    
     @FXML
     private TextField creditId;
-
+    
     @FXML
     private Text vagueId;
-
+    
     private Slots slot;
     
     private Tourelle selectedTourelle;
@@ -61,6 +59,9 @@ public class JeuControleur implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		jeu = new Jeu();
+		jeu.getMap().lectureFichier();
+		
 		// Taille de la map
 		terrain.setPrefWidth(28 * 32);
 		terrain.setPrefHeight(28 * 32);
@@ -68,13 +69,12 @@ public class JeuControleur implements Initializable {
 		initLoop();
 		gameLoop.play();
 		
-		jeu = new Jeu();
-		jeu.getMap().lectureFichier();
-		
-		vueInterface = new VueInterface(jeu, creditId);
 		vue = new VueMap(jeu, terrain);
 		vue.afficherMap();
 		
+		
+		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
+		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new VueMap(jeu, terrain));
 	}
 	
 	/***
@@ -83,7 +83,7 @@ public class JeuControleur implements Initializable {
 	public void gainFinVague() {
 		jeu.addCredits(250);
 	}
-		
+	
 	/***
 	 * Clique sur slot pour effectuer un achat
 	 * TODO à optimiser
@@ -97,7 +97,7 @@ public class JeuControleur implements Initializable {
         	selectedTourelle = t1;
     	} catch (CreditException e) {}
     }
-
+    
     @FXML
     void AchatSlot2(MouseEvent event) {
     	Tourelle t2 = new Tourelle("T2", 2);
@@ -107,7 +107,7 @@ public class JeuControleur implements Initializable {
         	selectedTourelle = t2;
     	} catch (CreditException e) {}
     }
-
+    
     @FXML
     void AchatSlot3(MouseEvent event) {
     	Tourelle t3 = new Tourelle("T3", 3);
@@ -145,8 +145,8 @@ public class JeuControleur implements Initializable {
 			} else if (atLeft == 100) {
 				orientation = 4;
 			}
-			
-    		vue.refreshCurrentCase(indice, selectedTourelle.getId(), orientation);
+		
+			vue.setRotationAngleImage(orientation);
     		selectedTourelle = null;
     	}
     }
@@ -157,7 +157,7 @@ public class JeuControleur implements Initializable {
 	public void initLoop() {
 		gameLoop = new Timeline();
 		gameLoop.setCycleCount(Timeline.INDEFINITE);
-
+		
 		KeyFrame kf = new KeyFrame(
 				// on definit les FPS (nombre de frames par secondes)
 				Duration.seconds(0.017),
@@ -165,12 +165,9 @@ public class JeuControleur implements Initializable {
 				// c'est un eventHandler d'ou le lambda
 				(ev -> {
 					if (temps % 2 == 0) {
-						vueInterface.refreshInterface();
 					}
 					temps++;
 				}));
 		gameLoop.getKeyFrames().add(kf);
 	}
-
-
 }

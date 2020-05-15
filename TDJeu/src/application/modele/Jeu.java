@@ -3,6 +3,8 @@ package application.modele;
 import application.exception.CreditException;
 import application.modele.Case.Carte;
 import application.modele.tourelle.Tourelle;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,29 +13,36 @@ public class Jeu {
 	private Carte map;
 	private ObservableList<Tourelle> TourellesEnJeu = FXCollections.observableArrayList();
 	
-	private int credits;
+	private IntegerProperty credits;
 
 	public Jeu() {
 
 		this.map = new Carte();
-		this.credits = 500;
+		this.credits = new SimpleIntegerProperty();
+		credits.set(500);
+		
+		
 	}
 
-	public int getCredits() {
+	public IntegerProperty getCreditsProperty() {
 		return this.credits;
 	}
 	
+	public int getCredits() {
+		return this.credits.getValue().intValue();
+	}
+	
 	public void setCredits(int valeur) {
-		this.credits = valeur;
+		this.credits.set(valeur);
 	}
 	
 	public void addCredits(int valeur) {
-		this.credits += valeur;
+		this.credits.add(valeur);
 	}
 	
 	public void removeCredits(int valeur) throws CreditException {
-		if (this.credits-valeur>=0) {
-			this.credits -= valeur;
+		if ((this.credits.getValue().intValue() - valeur) >= 0) {
+			this.credits.set(this.credits.getValue().intValue() - valeur);;
 		}
 		else {
 			throw new CreditException();
