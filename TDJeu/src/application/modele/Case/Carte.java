@@ -8,7 +8,8 @@ import java.io.IOException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import application.modele.Case.Planche;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.TilePane;
 
 
 public class Carte {
@@ -25,7 +26,7 @@ public class Carte {
 	}
 
 
-	public void lectureFichier() {
+	public void lectureFichier(TilePane terrain) {
 		File file = new File("MAP.csv");
 		BufferedReader buffuredReader = null;
 		int compteur = 0;
@@ -45,7 +46,7 @@ public class Carte {
 
 				for (int i = 0; i < map.length; i++) {
 					valeur = map[i];
-					creeTerrain(valeur);
+					creeTerrain(valeur, terrain);
 				}
 			}
 
@@ -65,40 +66,48 @@ public class Carte {
 		this.largeur = compteur;
 	}
 
-
-
-
-
-	public void creeTerrain(String valeur) {
+	public void creeTerrain(String valeur, TilePane terrain) {
+		ImageView img;
 		Case b;
 			switch(Integer.parseInt(valeur)) {
 			  case 248:
 				  b = new SolsMonstre();
+				  img = new ImageView("file:src/assets/SolMonstre.png");
 			    break;
 			  case 100:
 				  b = new Parcours();
+				  img = new ImageView("file:src/assets/Parcour.png");
 				    break;
 			  case 40:
 				  b = new EmplacementTourelle();
+				  img = new ImageView("file:src/assets/BlockTour.png");
 				    break;
 			  case 21:
 				  b = new MurNord();
+				  img = new ImageView("file:src/assets/MurNord.png");
 				    break;
 			  case 59:
 				  b = new MurSud();
+				  img = new ImageView("file:src/assets/MurSud.png");
 				    break;
 			  case 41:
 				  b = new MurEst();
+				  img = new ImageView("file:src/assets/MurDroite.png");
 				    break;
 			  case 39:
 				  b = new MurOuest();
+				  img = new ImageView("file:src/assets/MurGauche.png");
 				    break;
 			  case 401:
 				  b = new Facade();
+				  img = new ImageView("file:src/assets/FacadeMur.png");
 				    break;
 			  default:
 				  b = new Planche();
+				  img = new ImageView("file:src/assets/BlockPlanche.png");
+
 			}
+		terrain.getChildren().add(img);
 		obsListe.add(b);
 	}
 

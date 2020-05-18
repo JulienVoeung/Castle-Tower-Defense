@@ -6,9 +6,11 @@ import java.util.ResourceBundle;
 import application.exception.CreditException;
 import application.modele.Jeu;
 import application.modele.Case.Case;
+import application.modele.Monstre.Monstre;
 import application.modele.tourelle.Slots;
 import application.modele.tourelle.Tourelle;
 import application.vue.VueMap;
+import application.vue.VueMonstre;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
@@ -17,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -25,7 +28,6 @@ import javafx.util.Duration;
 public class JeuControleur implements Initializable {
 	
 	private Jeu jeu;
-	private VueMap vue;
 	
 	@FXML
 	private Timeline gameLoop;
@@ -34,6 +36,9 @@ public class JeuControleur implements Initializable {
 	@FXML
 	private TilePane terrain;
 	
+    @FXML
+    private Pane parcour;
+
 	@FXML
     private ImageView slot1;
 	
@@ -42,6 +47,9 @@ public class JeuControleur implements Initializable {
     
     @FXML
     private ImageView slot3;
+    
+	@FXML
+	private ImageView vueMonstre;
     
     @FXML
     private TextField creditId;
@@ -52,6 +60,7 @@ public class JeuControleur implements Initializable {
     private Slots slot;
     
     private Tourelle selectedTourelle;
+    
 	
 	/***
 	 * Methode qui initialise tout l'affichage.
@@ -60,69 +69,70 @@ public class JeuControleur implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		jeu = new Jeu();
-		jeu.getMap().lectureFichier();
-		
+		jeu.getMap().lectureFichier(terrain);
+		jeu.setMonstresByNiveau();
+
 		// Taille de la map
 		terrain.setPrefWidth(28 * 32);
 		terrain.setPrefHeight(28 * 32);
+
 		// Game loop
 		initLoop();
 		gameLoop.play();
 		
-		vue = new VueMap(jeu, terrain);
-		vue.afficherMap();
-		
-		
+		//Bind & Listener
 		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
+		vagueId.textProperty().bind(jeu.getVague().getNiveau().asString());
+		
 		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new VueMap(jeu, terrain));
+		
+		VueMonstre vMonstre = new VueMonstre(jeu, parcour);
+		vMonstre.creerMonstres();
+		
+		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new VueMonstre(jeu, parcour));		
 	}
 	
+	
+
 	/***
 	 * Gain de crédits 
 	 */
 	public void gainFinVague() {
 		jeu.addCredits(250);
 	}
-	
+		
 	/***
 	 * Clique sur slot pour effectuer un achat
-	 * TODO à optimiser
 	 */
     @FXML
     void AchatSlot1(MouseEvent event) {
-    	Tourelle t1 = new Tourelle("T1", 1);
-    	slot = new Slots(t1, jeu);
-    	try {
-    		slot.achatBoutique(1);
-        	selectedTourelle = t1;
-    	} catch (CreditException e) {}
+    	achatSlot("T1", 1);
     }
     
     @FXML
     void AchatSlot2(MouseEvent event) {
-    	Tourelle t2 = new Tourelle("T2", 2);
-    	slot = new Slots(t2, jeu);
-    	try {
-    		slot.achatBoutique(2);
-        	selectedTourelle = t2;
-    	} catch (CreditException e) {}
+    	achatSlot("T2", 2);
     }
     
     @FXML
     void AchatSlot3(MouseEvent event) {
-    	Tourelle t3 = new Tourelle("T3", 3);
-    	slot = new Slots(t3, jeu);
-    	try {
-    		slot.achatBoutique(3);
-        	selectedTourelle = t3;
-    	} catch (CreditException e) {}
+    	achatSlot("T3", 3);
+    }
+    
+    public void achatSlot(String nom, int tourelleId) {
+    	if (selectedTourelle == null) {
+    		Tourelle tourelle = new Tourelle(nom, tourelleId);
+    		slot = new Slots(tourelle, jeu);
+        	try {
+        		slot.achatBoutique(tourelleId);
+            	selectedTourelle = tourelle;
+        	} catch (CreditException e) {}
+    	}
     }
 	
     /***
      * Evenement lors du clique sur le terrain pour le placement d'une tourelle
      * Permet de définir une tourelle lors du clic sur une case emplacement
-     * Définit également l'orientation de la tourelle
-	 * TODO à optimiser
      * @param event
      */
     @FXML
@@ -131,22 +141,6 @@ public class JeuControleur implements Initializable {
 		Case currentCase = jeu.getMap().getListe().get(indice);
     	if (currentCase.getId() == 40 && selectedTourelle != null) {
     		jeu.placerTourelle(selectedTourelle, indice);
-
-    		// Orientation des tourelles lors du placement 
-    		int orientation = 1;
-			int atLeft = jeu.getMap().getListe().get(indice - 1).getId();
-			int atRight = jeu.getMap().getListe().get(indice + 1).getId();
-			int atBottom = jeu.getMap().getListe().get(indice + 28).getId();
-			
-			if (atRight == 100) {
-				orientation = 2;
-			} else if (atBottom == 100) {
-				orientation = 3;
-			} else if (atLeft == 100) {
-				orientation = 4;
-			}
-		
-			vue.setRotationAngleImage(orientation);
     		selectedTourelle = null;
     	}
     }
@@ -158,16 +152,19 @@ public class JeuControleur implements Initializable {
 		gameLoop = new Timeline();
 		gameLoop.setCycleCount(Timeline.INDEFINITE);
 		
-		KeyFrame kf = new KeyFrame(
+		KeyFrame frames = new KeyFrame(
 				// on definit les FPS (nombre de frames par secondes)
-				Duration.seconds(0.017),
+				Duration.seconds(1.017),
 				// on definit ce qui se passe a chaque frame
 				// c'est un eventHandler d'ou le lambda
 				(ev -> {
 					if (temps % 2 == 0) {
+						for (int j = 0; j < jeu.getVague().getListMonstre().size(); j++) {
+							jeu.getVague().getListMonstre().get(j).deplacerHaut();
+						}	
 					}
 					temps++;
 				}));
-		gameLoop.getKeyFrames().add(kf);
+		gameLoop.getKeyFrames().add(frames);
 	}
 }

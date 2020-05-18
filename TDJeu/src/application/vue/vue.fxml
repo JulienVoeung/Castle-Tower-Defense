@@ -56,7 +56,7 @@
       </Pane>
    </bottom>
    <center>
-      <Pane focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="896.0" prefWidth="896.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="parcour" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="896.0" prefWidth="896.0" BorderPane.alignment="CENTER">
          <children>
             <TilePane fx:id="terrain" onMouseClicked="#CliqueTerrain" prefHeight="896.0" prefWidth="896.0" />
          </children>

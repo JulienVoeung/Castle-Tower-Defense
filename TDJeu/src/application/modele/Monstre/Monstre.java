@@ -6,27 +6,39 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Monstre {
 
     private int vitesse;
-    private int pv;
+    private int vie;
+    private int gain;
+    
     private IntegerProperty x;
     private IntegerProperty y;
     private int deplacementy;
     private int deplacementx;
+    
 
-    public Monstre(int v, int pv, int x, int y) {
-        this.vitesse = v;
-        this.pv = pv;
-        this.x = new SimpleIntegerProperty();
-        this.y = new SimpleIntegerProperty();
+    public Monstre(int vitesse, int vie, int gain, int x, int y) {
+        this.vitesse = vitesse;
+        this.vie = vie;
+        this.setGain(gain);
+        this.x = new SimpleIntegerProperty(x);
+        this.y = new SimpleIntegerProperty(y);
         this.deplacementx = 12;
         this.deplacementy = 12;
     }
 
+	public int getGain() {
+		return this.gain;
+	}
+
+	public void setGain(int gain) {
+		this.gain = gain;
+	}
+	
     public int getVitesse() {
         return this.vitesse;
     }
 
     public int getPv() {
-        return this.pv; 
+        return this.vie; 
     }
 
     public IntegerProperty getXProperty() {
@@ -54,7 +66,7 @@ public class Monstre {
     }
 
     public void deplacerGauche() {
-        this.setXProperty(-this.deplacementx + this.getX());
+        this.setXProperty(-this.deplacementx + this.getX());       
     }
 
     public void deplacerDroite() {
@@ -72,4 +84,5 @@ public class Monstre {
     public String toString() {
     	return "x : "+ this.getX() + " y : " + this.getY();
     }
+
 }

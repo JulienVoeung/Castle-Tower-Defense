@@ -2,7 +2,7 @@ package application.modele.tourelle;
 
 import application.modele.Case.Case;
 
-public class Tourelle extends Case{
+public class Tourelle extends Case {
 	
 	private int prix;
 	private int degats;

@@ -1,27 +1,30 @@
 package application.modele;
 
+import java.util.ArrayList;
+
+import application.configMonstres;
 import application.exception.CreditException;
 import application.modele.Case.Carte;
+import application.modele.Monstre.Vague;
 import application.modele.tourelle.Tourelle;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 
 public class Jeu {
 
 	private Carte map;
-	private ObservableList<Tourelle> TourellesEnJeu = FXCollections.observableArrayList();
+	
+	private ArrayList<Tourelle> TourellesEnJeu = new ArrayList<>();
 	
 	private IntegerProperty credits;
+	
+	private Vague vague;
 
 	public Jeu() {
-
 		this.map = new Carte();
-		this.credits = new SimpleIntegerProperty();
-		credits.set(500);
-		
-		
+		this.vague = new Vague();
+		this.credits = new SimpleIntegerProperty(500);
 	}
 
 	public IntegerProperty getCreditsProperty() {
@@ -42,12 +45,11 @@ public class Jeu {
 	
 	public void removeCredits(int valeur) throws CreditException {
 		if ((this.credits.getValue().intValue() - valeur) >= 0) {
-			this.credits.set(this.credits.getValue().intValue() - valeur);;
+			this.credits.set(this.credits.getValue().intValue() - valeur);
 		}
 		else {
 			throw new CreditException();
 		}
-		
 	}
 	
 	public void ajouterTourelle(Tourelle tourelle) {
@@ -61,5 +63,12 @@ public class Jeu {
 	public void placerTourelle(Tourelle tourelle, int indice) {
 		this.map.getListe().set(indice, tourelle);
 	}
-		
+
+	public Vague getVague() {
+		return vague;
+	}
+	
+	public void setMonstresByNiveau() {
+		this.vague.ajouterMonstres(configMonstres.getMonstreByNiveau(this.vague.getNiveau().get()));
+	}			
 }
