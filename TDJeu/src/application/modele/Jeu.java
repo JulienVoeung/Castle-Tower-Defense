@@ -2,9 +2,9 @@ package application.modele;
 
 import java.util.ArrayList;
 
-import application.configMonstres;
 import application.exception.CreditException;
 import application.modele.Case.Carte;
+import application.modele.Monstre.Monstre;
 import application.modele.Monstre.Vague;
 import application.modele.tourelle.Tourelle;
 import javafx.beans.property.IntegerProperty;
@@ -26,7 +26,17 @@ public class Jeu {
 		this.vague = new Vague();
 		this.credits = new SimpleIntegerProperty(500);
 	}
-
+	
+	public Carte getMap() {
+		return this.map;
+	}
+	public Vague getVague() {
+		return vague;
+	}
+	
+	/***
+	 * Gestion des credits
+	 */
 	public IntegerProperty getCreditsProperty() {
 		return this.credits;
 	}
@@ -52,23 +62,31 @@ public class Jeu {
 		}
 	}
 	
+	/***
+	 * Gestion des tourelles
+	 */
 	public void ajouterTourelle(Tourelle tourelle) {
 		TourellesEnJeu.add(tourelle);
 	}
 
-	public Carte getMap() {
-		return this.map;
-	}
-	
 	public void placerTourelle(Tourelle tourelle, int indice) {
 		this.map.getListe().set(indice, tourelle);
 	}
 
-	public Vague getVague() {
-		return vague;
+	/***
+	 * Gestion des Monstres
+	 */
+	public void spawnMonstre() {
+		this.vague.getListMonstre();
 	}
 	
-	public void setMonstresByNiveau() {
-		this.vague.ajouterMonstres(configMonstres.getMonstreByNiveau(this.vague.getNiveau().get()));
-	}			
+	public boolean deplacementAutoriser(Monstre monstre) {
+		int indiceCurrentCase = map.Indice(monstre.getX(), monstre.getY());
+		if (this.map.getListe().get(indiceCurrentCase).getId() == 100) {
+			System.out.println("OKE");
+			return true;
+		}
+		return false;
+	}
+	
 }

@@ -70,30 +70,23 @@ public class JeuControleur implements Initializable {
 		
 		jeu = new Jeu();
 		jeu.getMap().lectureFichier(terrain);
-		jeu.setMonstresByNiveau();
-
+		jeu.getVague().incrementerNiveau();
+	
 		// Taille de la map
 		terrain.setPrefWidth(28 * 32);
 		terrain.setPrefHeight(28 * 32);
-
+		
 		// Game loop
 		initLoop();
-		gameLoop.play();
+		gameLoop.play();	
 		
 		//Bind & Listener
 		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
 		vagueId.textProperty().bind(jeu.getVague().getNiveau().asString());
-		
+		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new VueMonstre(parcour));	
 		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new VueMap(jeu, terrain));
-		
-		VueMonstre vMonstre = new VueMonstre(jeu, parcour);
-		vMonstre.creerMonstres();
-		
-		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new VueMonstre(jeu, parcour));		
 	}
 	
-	
-
 	/***
 	 * Gain de crédits 
 	 */
@@ -154,14 +147,18 @@ public class JeuControleur implements Initializable {
 		
 		KeyFrame frames = new KeyFrame(
 				// on definit les FPS (nombre de frames par secondes)
-				Duration.seconds(1.017),
+				Duration.seconds(0.500),
 				// on definit ce qui se passe a chaque frame
 				// c'est un eventHandler d'ou le lambda
 				(ev -> {
 					if (temps % 2 == 0) {
+						jeu.getVague().spawnMonstres();
+
 						for (int j = 0; j < jeu.getVague().getListMonstre().size(); j++) {
-							jeu.getVague().getListMonstre().get(j).deplacerHaut();
-						}	
+							//if (jeu.deplacementAutoriser(jeu.getVague().getListMonstre().get(j)) == true) {
+								jeu.getVague().getListMonstre().get(j).deplacerHaut();
+							//}
+						}
 					}
 					temps++;
 				}));

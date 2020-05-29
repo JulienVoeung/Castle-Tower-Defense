@@ -12,27 +12,45 @@ public class Vague {
 
 	private ObservableList<Monstre> listMonstre = FXCollections.observableArrayList();
 	
+	private ArrayList<Monstre> listMonstresStockés = new ArrayList<>();
+	
 	private Monstre monstre;
 	
 	private IntegerProperty niveau;
+	
 	public Vague() {
 		
 		this.monstre = new Pig(configMonstres.CASE_X, configMonstres.CASE_Y);
-		this.niveau = new SimpleIntegerProperty(1);
+		this.niveau = new SimpleIntegerProperty(0);
 	}
 		
 	public void ajouterMonstre(Monstre monstre) {
-		 listMonstre.add(monstre);
+		 this.listMonstre.add(monstre);
 	}
 	
 	public void ajouterMonstres(ArrayList<Monstre> monstres) {
-		listMonstre.addAll(monstres);
+		this.listMonstre.addAll(monstres);
 	}
 	
 	public void incrementerNiveau() {
-		this.niveau.add(1);
+		int newNiveau = this.niveau.get() + 1;
+		this.niveau.set(newNiveau);
+		this.viderListe();
+		System.err.println(this.niveau.get());
+		this.listMonstresStockés.addAll(configMonstres.getMonstreByNiveau(this.niveau.getValue()));
 	}
 	
+	public void spawnMonstres() {
+		if (this.listMonstresStockés.size() > 0) {
+			this.listMonstre.add(this.listMonstresStockés.get(0));
+			this.listMonstresStockés.remove(0);	
+		}
+	}
+	
+	public void viderListe() {
+		this.listMonstre.clear();
+	}
+
 	public IntegerProperty getNiveau() {
 		return this.niveau;
 	}
