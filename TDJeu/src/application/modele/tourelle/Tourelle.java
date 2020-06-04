@@ -8,7 +8,9 @@ public class Tourelle extends Case {
 	private int degats;
 	private int cooldown;
 	private int range;
-		
+	private int x;
+	private int y;
+	
 	public Tourelle(String nom, int id) {
 		super(nom, id, false);
 	}
@@ -50,5 +52,21 @@ public class Tourelle extends Case {
 
 	public void setRange(int range) {
 		this.range = range;
+	}
+	
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	public int getX() {
+		return this.x;
+	}
+	
+	public void setY(int y) {
+		this.y = y;
+	}
+	
+	public int getY() {
+		return this.y;
 	}
 }

@@ -46,7 +46,7 @@ public class Monstre {
     }
 
     public int getX() {
-        return this.x.get();
+        return this.x.getValue();
     }
 
     public void setXProperty(int x) {
@@ -58,7 +58,7 @@ public class Monstre {
     }
 
     public int getY() {
-        return this.y.get();
+        return this.y.getValue();
     }
 
     public void setYProperty(int y) {

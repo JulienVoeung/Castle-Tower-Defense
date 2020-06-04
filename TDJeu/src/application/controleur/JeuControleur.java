@@ -10,12 +10,12 @@ import application.modele.Monstre.Monstre;
 import application.modele.tourelle.Slots;
 import application.modele.tourelle.Tourelle;
 import application.vue.VueMap;
-import application.vue.VueMonstre;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -57,6 +57,13 @@ public class JeuControleur implements Initializable {
     @FXML
     private Text vagueId;
     
+    @FXML
+    private Button dbVague;
+
+    @FXML
+    private Text vieId;
+
+    
     private Slots slot;
     
     private Tourelle selectedTourelle;
@@ -70,21 +77,25 @@ public class JeuControleur implements Initializable {
 		
 		jeu = new Jeu();
 		jeu.getMap().lectureFichier(terrain);
-		jeu.getVague().incrementerNiveau();
-	
+		//jeu.getVague().incrementerNiveau();
+		
+		VueMap vMap = new VueMap(jeu, terrain);
+		vMap.afficherMap();
+		
 		// Taille de la map
 		terrain.setPrefWidth(28 * 32);
 		terrain.setPrefHeight(28 * 32);
 		
 		// Game loop
 		initLoop();
-		gameLoop.play();	
+		gameLoop.play();
 		
 		//Bind & Listener
 		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
 		vagueId.textProperty().bind(jeu.getVague().getNiveau().asString());
-		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new VueMonstre(parcour));	
-		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new VueMap(jeu, terrain));
+		vieId.textProperty().bind(jeu.getVie().asString());
+		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new EcouteurMonstre(parcour));	
+		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new EcouteurMap(jeu, terrain));
 	}
 	
 	/***
@@ -93,6 +104,13 @@ public class JeuControleur implements Initializable {
 	public void gainFinVague() {
 		jeu.addCredits(250);
 	}
+	
+    @FXML
+    void dbProchaineVague(MouseEvent event) {
+    	if (jeu.getVague().isFinished() && jeu.getVie().getValue() > 0) {
+			jeu.getVague().incrementerNiveau();
+		}
+    }
 		
 	/***
 	 * Clique sur slot pour effectuer un achat
@@ -134,6 +152,8 @@ public class JeuControleur implements Initializable {
 		Case currentCase = jeu.getMap().getListe().get(indice);
     	if (currentCase.getId() == 40 && selectedTourelle != null) {
     		jeu.placerTourelle(selectedTourelle, indice);
+    		selectedTourelle.setX((int) event.getX());
+    		selectedTourelle.setY((int) event.getY());
     		selectedTourelle = null;
     	}
     }
@@ -151,17 +171,22 @@ public class JeuControleur implements Initializable {
 				// on definit ce qui se passe a chaque frame
 				// c'est un eventHandler d'ou le lambda
 				(ev -> {
-					if (temps % 2 == 0) {
+					if (temps % 2 == 0) {	
 						jeu.getVague().spawnMonstres();
-
+						jeu.detectMonstres();
 						for (int j = 0; j < jeu.getVague().getListMonstre().size(); j++) {
-							//if (jeu.deplacementAutoriser(jeu.getVague().getListMonstre().get(j)) == true) {
-								jeu.getVague().getListMonstre().get(j).deplacerHaut();
-							//}
+							Monstre currentMonstre = jeu.getVague().getListMonstre().get(j);
+							if (jeu.deplacementAutoriser(currentMonstre)) {
+								currentMonstre.deplacerHaut();
+								jeu.verifyDeplacements(currentMonstre);
+							}
 						}
+						
 					}
 					temps++;
 				}));
 		gameLoop.getKeyFrames().add(frames);
 	}
 }
+
+

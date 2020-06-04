@@ -33,7 +33,6 @@ public class Slots {
 				jeu.removeCredits(100);
 				break;
 			}
-			jeu.ajouterTourelle(this.tourelle);
 		} catch (CreditException e) {
 			Alert alerte = new Alert(AlertType.ERROR);
 			alerte.setContentText("Crédits insuffisants");
@@ -41,6 +40,5 @@ public class Slots {
 			alerte.showAndWait();
 			throw new CreditException();
 		}
-		
 	}
 }

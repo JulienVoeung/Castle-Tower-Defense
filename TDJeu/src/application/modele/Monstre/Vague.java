@@ -2,7 +2,7 @@ package application.modele.Monstre;
 
 import java.util.ArrayList;
 
-import application.configMonstres;
+import application.config;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 
 public class Vague {
 
-	private ObservableList<Monstre> listMonstre = FXCollections.observableArrayList();
+	private ObservableList<Monstre> listMonstreEnJeu = FXCollections.observableArrayList();
 	
 	private ArrayList<Monstre> listMonstresStockés = new ArrayList<>();
 	
@@ -20,35 +20,35 @@ public class Vague {
 	
 	public Vague() {
 		
-		this.monstre = new Pig(configMonstres.CASE_X, configMonstres.CASE_Y);
+		this.monstre = new Pig(config.CASE_X, config.CASE_Y);
 		this.niveau = new SimpleIntegerProperty(0);
 	}
 		
 	public void ajouterMonstre(Monstre monstre) {
-		 this.listMonstre.add(monstre);
+		 this.listMonstreEnJeu.add(monstre);
 	}
 	
 	public void ajouterMonstres(ArrayList<Monstre> monstres) {
-		this.listMonstre.addAll(monstres);
+		this.listMonstreEnJeu.addAll(monstres);
 	}
 	
 	public void incrementerNiveau() {
 		int newNiveau = this.niveau.get() + 1;
 		this.niveau.set(newNiveau);
 		this.viderListe();
-		System.err.println(this.niveau.get());
-		this.listMonstresStockés.addAll(configMonstres.getMonstreByNiveau(this.niveau.getValue()));
+		this.listMonstresStockés.addAll(config.getMonstreByNiveau(this.niveau.getValue()));
 	}
 	
 	public void spawnMonstres() {
 		if (this.listMonstresStockés.size() > 0) {
-			this.listMonstre.add(this.listMonstresStockés.get(0));
+			this.listMonstreEnJeu.add(this.listMonstresStockés.get(0));
 			this.listMonstresStockés.remove(0);	
 		}
 	}
 	
+	
 	public void viderListe() {
-		this.listMonstre.clear();
+		this.listMonstreEnJeu.clear();
 	}
 
 	public IntegerProperty getNiveau() {
@@ -60,10 +60,16 @@ public class Vague {
 	}
 	
 	public ObservableList<Monstre> getListMonstre(){
-		return this.listMonstre;
+		return this.listMonstreEnJeu;
 	}
 
 	public Monstre getMonstre() {
 		return this.monstre;
+	}
+	
+	public boolean isFinished() {
+		int sizeListMonstre = this.listMonstreEnJeu.size();
+		int sizeListMonstreStock = this.listMonstresStockés.size();
+		return sizeListMonstre == 0 && sizeListMonstreStock == 0;
 	}
 }

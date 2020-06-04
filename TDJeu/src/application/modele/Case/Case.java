@@ -24,4 +24,5 @@ public abstract class Case{
 		return this.nom;
 	}
 
+	
 }

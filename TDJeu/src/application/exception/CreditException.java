@@ -6,3 +6,4 @@ public class CreditException extends Exception {
 		System.err.println("Crédits insuffisants");
 	}
 }
+
