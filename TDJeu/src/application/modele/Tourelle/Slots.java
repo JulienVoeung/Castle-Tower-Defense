@@ -1,4 +1,4 @@
-package application.modele.tourelle;
+package application.modele.Tourelle;
 
 import application.exception.CreditException;
 import application.modele.Jeu;
@@ -8,12 +8,10 @@ import javafx.scene.control.Alert.AlertType;
 public class Slots {
 
 	private Jeu jeu;
-	private Tourelle tourelle;
 	
 	public Slots() {}
 	
-	public Slots(Tourelle tourelle, Jeu jeu) {
-		this.tourelle = tourelle;
+	public Slots(Jeu jeu) {
 		this.jeu = jeu;
 	}
 	

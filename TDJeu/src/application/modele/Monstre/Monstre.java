@@ -14,8 +14,11 @@ public class Monstre {
     private int deplacementy;
     private int deplacementx;
     
+    private String nom;
+    
 
-    public Monstre(int vitesse, int vie, int gain, int x, int y) {
+    public Monstre(String nom, int vitesse, int vie, int gain, int x, int y) {
+    	this.nom = nom;
         this.vitesse = vitesse;
         this.vie = vie;
         this.setGain(gain);
@@ -82,7 +85,12 @@ public class Monstre {
     }
     
     public String toString() {
-    	return "x : "+ this.getX() + " y : " + this.getY();
+    	return "Nom : "+ this.nom +"x : "+ this.getX() + " y : " + this.getY();
     }
-
+    
+    public void decrementerVie() {
+    	if (this.vie > 0) {
+    		this.vie -= 1;
+		}
+    }
 }

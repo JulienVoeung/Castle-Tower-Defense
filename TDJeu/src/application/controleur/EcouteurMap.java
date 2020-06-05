@@ -2,9 +2,12 @@ package application.controleur;
 
 import application.modele.Jeu;
 import application.modele.Case.Case;
+import application.modele.Monstre.Monstre;
+import application.modele.Tourelle.Tourelle;
+import application.utils.utils;
+import javafx.collections.ListChangeListener;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
-import javafx.collections.ListChangeListener;
 
 
 public class EcouteurMap implements ListChangeListener<Case>  {
@@ -20,21 +23,11 @@ public class EcouteurMap implements ListChangeListener<Case>  {
 	
 	@Override
 	public void onChanged(Change<? extends Case> e) {
-		ImageView img = new ImageView("file:src/assets/BlockTour.png");;
+		ImageView img = new ImageView("file:src/assets/BlockTour.png");
 
 		while (e.next()) {
 			if(e.wasReplaced()) {
-				switch (jeu.getMap().getListe().get(e.getFrom()).getId()) {
-				case 1:
-					img = new ImageView("file:src/assets/tower1.png");
-					break;
-				case 2:
-					img = new ImageView("file:src/assets/tower2.png");
-					break;
-				case 3:
-					img = new ImageView("file:src/assets/tower3.png");
-					break;
-				}
+				img = choixTourelles(e.getFrom());
 			}
 			terrain.getChildren().set(e.getFrom(), getImgWithRotation(img, e.getFrom()));
 		}	
@@ -55,5 +48,39 @@ public class EcouteurMap implements ListChangeListener<Case>  {
 			img.setRotate(270.0);
 		}
 		return img;
+	}
+	
+	public void setRotation(Tourelle tourelle, double angle) {
+		int indice = 0;
+		for (int key : jeu.getTourellesEnJeu().keySet()) {
+			if (tourelle.equals(jeu.getTourellesEnJeu().get(key))) {
+				indice = key;
+			}
+		}
+		
+		ImageView img = choixTourelles(indice);
+		img.setRotate(angle);
+		terrain.getChildren().set(indice, img);
+	}
+	
+	public ImageView choixTourelles(int indice) {
+		ImageView img = new ImageView("file:src/assets/BlockTour.png");
+		switch (jeu.getMap().getListe().get(indice).getId()) {
+		case 1:
+			img = new ImageView("file:src/assets/tower1.png");
+			break;
+		case 2:
+			img = new ImageView("file:src/assets/tower2.png");
+			break;
+		case 3:
+			img = new ImageView("file:src/assets/tower3.png");
+			break;
+		}
+		return img;
+	}
+	
+	public void rotationTourelleSurMonstre(Monstre monstre, Tourelle tourelle) {
+		double angle = utils.getAngle(monstre.getX(), monstre.getY(), tourelle.getX(), tourelle.getY());
+		this.setRotation(tourelle, angle);
 	}
 }

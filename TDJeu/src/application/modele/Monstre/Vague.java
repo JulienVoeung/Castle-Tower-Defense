@@ -14,13 +14,10 @@ public class Vague {
 	
 	private ArrayList<Monstre> listMonstresStockés = new ArrayList<>();
 	
-	private Monstre monstre;
 	
 	private IntegerProperty niveau;
 	
 	public Vague() {
-		
-		this.monstre = new Pig(config.CASE_X, config.CASE_Y);
 		this.niveau = new SimpleIntegerProperty(0);
 	}
 		
@@ -46,7 +43,6 @@ public class Vague {
 		}
 	}
 	
-	
 	public void viderListe() {
 		this.listMonstreEnJeu.clear();
 	}
@@ -63,13 +59,16 @@ public class Vague {
 		return this.listMonstreEnJeu;
 	}
 
-	public Monstre getMonstre() {
-		return this.monstre;
-	}
-	
 	public boolean isFinished() {
 		int sizeListMonstre = this.listMonstreEnJeu.size();
 		int sizeListMonstreStock = this.listMonstresStockés.size();
 		return sizeListMonstre == 0 && sizeListMonstreStock == 0;
+	}
+	
+	public void attaqueEtMortDuMonstre(Monstre monstre) {
+		monstre.decrementerVie();
+		if (monstre.getPv() == 0) {
+			this.listMonstreEnJeu.remove(monstre);
+		}
 	}
 }

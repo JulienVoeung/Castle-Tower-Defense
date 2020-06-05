@@ -24,16 +24,16 @@ public class config {
 		switch (niveau) {
 		case 1:
 			for (int i = 0; i < 2; i++) {
-				Monstre pig = new Pig(CASE_X, CASE_Y);
-				Monstre pig2 = new Pig(CASE_2_X, CASE_2_Y);
+				Monstre pig = new Pig("Pig " + i + "G", CASE_X, CASE_Y);
+				Monstre pig2 = new Pig("Pig " + i + "D", CASE_2_X, CASE_2_Y);
 				monstres.add(pig);
 				monstres.add(pig2);
 			}
 			break;
 		case 2:
 			for (int i = 0; i < 2; i++) {
-				Monstre pig = new Pig(CASE_X, CASE_Y);
-				Monstre pig2 = new Pig(CASE_2_X, CASE_2_Y);
+				Monstre pig = new Pig("Pig " + i + "G", CASE_X, CASE_Y);
+				Monstre pig2 = new Pig("Pig " + i + "D", CASE_2_X, CASE_2_Y);
 				monstres.add(pig);
 				monstres.add(pig2);
 			}

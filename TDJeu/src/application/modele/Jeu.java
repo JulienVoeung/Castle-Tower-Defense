@@ -1,14 +1,15 @@
 package application.modele;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import application.config;
+import application.controleur.EcouteurMap;
 import application.exception.CreditException;
 import application.exception.GameOverException;
 import application.modele.Case.Carte;
 import application.modele.Monstre.Monstre;
 import application.modele.Monstre.Vague;
-import application.modele.tourelle.Tourelle;
+import application.modele.Tourelle.Tourelle;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Alert;
@@ -21,7 +22,7 @@ public class Jeu {
 	
 	private IntegerProperty vie;
 	
-	private ArrayList<Tourelle> TourellesEnJeu = new ArrayList<>();
+	private HashMap<Integer, Tourelle> TourellesEnJeu = new HashMap<>();
 	
 	private IntegerProperty credits;
 	
@@ -74,10 +75,10 @@ public class Jeu {
 	 */
 	public void placerTourelle(Tourelle tourelle, int indice) {
 		this.map.getListe().set(indice, tourelle);
-		this.TourellesEnJeu.add(tourelle);
+		this.TourellesEnJeu.put(indice, tourelle);
 	}
 	
-	public ArrayList<Tourelle> getTourellesEnJeu() {
+	public HashMap<Integer, Tourelle> getTourellesEnJeu() {
 		return this.TourellesEnJeu;
 	}
 
@@ -91,30 +92,6 @@ public class Jeu {
 		}
 		return false;
 	}
-	
-    /***
-     * Permet de détecter les monstres à portée de chaque tourelle
-     */
-    public void detectMonstres() {
-		for (Tourelle tourelle : this.getTourellesEnJeu()) {
-			int xa = tourelle.getX();
-			int ya = tourelle.getY();
-		   	int currentRange = 2;
-		   	
-		   	for (Monstre monstre : this.getVague().getListMonstre()) {
-		   		int xb = monstre.getX();
-		   		int yb = monstre.getY();
-		   		
-		   		// Différence entre deux points dans un plan cartésien :
-		   		// Formule : Racine((xb - xa)² + (yb - ya)²)
-		   		double difference = Math.sqrt(Math.pow(xb - xa, 2) + Math.pow(yb - ya, 2));
-		   		//System.out.println(currentRange * 32 - difference);
-		   		if (currentRange * 32 >= difference) {
-		   			System.err.println("MONSTRE EN RANGE !");
-		   		}
-		   	}
-		}
-    }
     
 	public void retirerMonstre(Monstre monstre) {
 		int index = this.vague.getListMonstre().indexOf(monstre);
@@ -148,4 +125,19 @@ public class Jeu {
 			}
 		}
 	}
+	
+	public void rotationEtAttaqueDesTourelles(EcouteurMap ecouteurMap) {
+		for (Tourelle tourelle : this.TourellesEnJeu.values()) {
+			Monstre monstre = tourelle.detectMonstres();
+			if (monstre != null) {
+				ecouteurMap.rotationTourelleSurMonstre(monstre, tourelle);
+				tourelle.decrementerCooldown();
+				if (tourelle.canAttack()) {
+					this.vague.attaqueEtMortDuMonstre(monstre);
+				}
+			}
+		}
+	}
+	
+	
 }

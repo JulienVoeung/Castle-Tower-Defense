@@ -4,3 +4,7 @@ TextField {
 	-fx-text-fill: #c49250;
 	-fx-alignment: center;
 }
+
+Pane{
+	-fx-background-color: #3F3851;
+}

@@ -5,10 +5,11 @@ import java.util.ResourceBundle;
 
 import application.exception.CreditException;
 import application.modele.Jeu;
+import application.modele.BFS.DeplacementBFS;
 import application.modele.Case.Case;
 import application.modele.Monstre.Monstre;
-import application.modele.tourelle.Slots;
-import application.modele.tourelle.Tourelle;
+import application.modele.Tourelle.Slots;
+import application.modele.Tourelle.Tourelle;
 import application.vue.VueMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -68,7 +69,7 @@ public class JeuControleur implements Initializable {
     
     private Tourelle selectedTourelle;
     
-	
+	private EcouteurMap ecouteurMap;
 	/***
 	 * Methode qui initialise tout l'affichage.
 	 */
@@ -77,10 +78,13 @@ public class JeuControleur implements Initializable {
 		
 		jeu = new Jeu();
 		jeu.getMap().lectureFichier(terrain);
+		DeplacementBFS bfs = new DeplacementBFS();
+		bfs.deplaceBFS(jeu.getMap().getListe());
 		//jeu.getVague().incrementerNiveau();
 		
 		VueMap vMap = new VueMap(jeu, terrain);
 		vMap.afficherMap();
+		ecouteurMap = new EcouteurMap(jeu, terrain);
 		
 		// Taille de la map
 		terrain.setPrefWidth(28 * 32);
@@ -94,46 +98,50 @@ public class JeuControleur implements Initializable {
 		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
 		vagueId.textProperty().bind(jeu.getVague().getNiveau().asString());
 		vieId.textProperty().bind(jeu.getVie().asString());
+		
 		jeu.getVague().getListMonstre().addListener((ListChangeListener<? super Monstre>) new EcouteurMonstre(parcour));	
 		jeu.getMap().getListe().addListener((ListChangeListener<? super Case>) new EcouteurMap(jeu, terrain));
+		
 	}
 	
 	/***
 	 * Gain de crédits 
 	 */
-	public void gainFinVague() {
-		jeu.addCredits(250);
-	}
-	
     @FXML
     void dbProchaineVague(MouseEvent event) {
     	if (jeu.getVague().isFinished() && jeu.getVie().getValue() > 0) {
 			jeu.getVague().incrementerNiveau();
+			gainFinVague();
 		}
     }
+    
+    public void gainFinVague() {
+		jeu.addCredits(250);
+	}
+	
 		
 	/***
 	 * Clique sur slot pour effectuer un achat
 	 */
     @FXML
     void AchatSlot1(MouseEvent event) {
-    	achatSlot("T1", 1);
+    	achatSlot("T1", 1, 100, 40, 3, 3);
     }
     
     @FXML
     void AchatSlot2(MouseEvent event) {
-    	achatSlot("T2", 2);
+    	achatSlot("T2", 2, 200, 40, 3, 3);
     }
     
     @FXML
     void AchatSlot3(MouseEvent event) {
-    	achatSlot("T3", 3);
+    	achatSlot("T3", 3, 300, 150, 5, 5);
     }
     
-    public void achatSlot(String nom, int tourelleId) {
+    public void achatSlot(String nom, int tourelleId, int prix, int degats, int cooldown, int range) {
     	if (selectedTourelle == null) {
-    		Tourelle tourelle = new Tourelle(nom, tourelleId);
-    		slot = new Slots(tourelle, jeu);
+    		Tourelle tourelle = new Tourelle(nom, tourelleId, prix, degats, cooldown, range, this.jeu);
+    		slot = new Slots(jeu);
         	try {
         		slot.achatBoutique(tourelleId);
             	selectedTourelle = tourelle;
@@ -173,7 +181,8 @@ public class JeuControleur implements Initializable {
 				(ev -> {
 					if (temps % 2 == 0) {	
 						jeu.getVague().spawnMonstres();
-						jeu.detectMonstres();
+						jeu.rotationEtAttaqueDesTourelles(ecouteurMap); 
+						
 						for (int j = 0; j < jeu.getVague().getListMonstre().size(); j++) {
 							Monstre currentMonstre = jeu.getVague().getListMonstre().get(j);
 							if (jeu.deplacementAutoriser(currentMonstre)) {
@@ -181,7 +190,6 @@ public class JeuControleur implements Initializable {
 								jeu.verifyDeplacements(currentMonstre);
 							}
 						}
-						
 					}
 					temps++;
 				}));
