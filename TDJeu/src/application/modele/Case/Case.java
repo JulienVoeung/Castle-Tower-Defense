@@ -1,14 +1,17 @@
 package application.modele.Case;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public abstract class Case{
 
     private boolean traversable;
-    private String nom;
+    private StringProperty nom;
     private int id;
     private boolean marquage;
 
     public Case(String nomBlock, int id, boolean traversable) {
-        this.nom = nomBlock;
+        this.nom = new SimpleStringProperty(nomBlock);
         this.id = id;
         this.traversable = traversable;
         this.marquage = false;
@@ -22,7 +25,7 @@ public abstract class Case{
         return this.id;
     }
 
-    public String getNom() {
+    public StringProperty getNom() {
         return this.nom;
     }
 

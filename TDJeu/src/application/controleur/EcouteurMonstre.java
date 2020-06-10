@@ -2,6 +2,7 @@ package application.controleur;
 
 import application.modele.Monstre.Monstre;
 import application.modele.Monstre.Pig;
+import application.modele.Monstre.RoiPig;
 import javafx.collections.ListChangeListener;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,9 @@ public class EcouteurMonstre implements ListChangeListener<Monstre>{
 	public void afficherMonstre(Monstre currentMonstre) {
 		if (currentMonstre instanceof Pig) {
 			monstre = new ImageView("file:src/assets/pig.png");
+		}
+		if (currentMonstre instanceof RoiPig) {
+			monstre = new ImageView("file:src/assets/RoiPig.png");
 		}
 		this.parcour.getChildren().add(monstre);	
 		

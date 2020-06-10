@@ -29,13 +29,11 @@ public class VueMap extends TilePane{
 			  case 40:
 				  img = new ImageView("file:src/assets/BlockTour.png");
 				    break;
-
 			  case 21:
 				  img = new ImageView("file:src/assets/MurNord.png");
 				    break;
 			  case 59:
 				  img = new ImageView("file:src/assets/MurGauche.png");
-
 				    break;
 			  case 41:
 				  img = new ImageView("file:src/assets/MurDroite.png");
@@ -43,9 +41,14 @@ public class VueMap extends TilePane{
 			  case 39:
 				  img = new ImageView("file:src/assets/MurSud.png");
 				    break;
-
 			  case 401:
 				  img = new ImageView("file:src/assets/FacadeMur.png");
+				    break;
+			  case 50:
+				  img = new ImageView("file:src/assets/emplacementMine.png");
+				    break;
+			  case 51:
+				  img = new ImageView("file:src/assets/mine.png");
 				    break;
 			  default:
 				  img = new ImageView("file:src/assets/BlockPlanche.png");

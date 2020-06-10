@@ -10,67 +10,73 @@ import javafx.collections.ObservableList;
 public class DeplacementBFS {
 	
 	private ArrayList<Case> ListeCaseTraversable;
-	private ArrayList<Case> ListeCasesNonMarquer;
 	private HashMap<Case, Case> CoupleCase; 
 	LinkedList<Case> file;
+	private ObservableList<Case> map;
 	
-	public DeplacementBFS() {
+	public DeplacementBFS(ObservableList<Case> Map) {
 		this.ListeCaseTraversable = new ArrayList<Case>();
-		this.ListeCasesNonMarquer = new ArrayList<Case>();
 		this.file = new LinkedList<Case>();
 		this.CoupleCase = new HashMap<Case, Case>();
+		this.map = Map; 
+		
 	} 
 	
-	public void initListCheminIndice(ObservableList<Case> Map) {
-		for(int i = 0 ; i < Map.size(); i++) { 
-			if(Map.get(i).getTraversable() == true)
-				this.ListeCaseTraversable.add(Map.get(i));
+	public ArrayList<Case> initListChemin() {
+		for(int i = 0 ; i < this.map.size(); i++) { 
+			if(this.map.get(i).getId() == 248)
+				this.ListeCaseTraversable.add(this.map.get(i));
 		}
+		return this.ListeCaseTraversable;
 	}
 
 	
-	public void deplaceBFS(ObservableList<Case> Map) {
-		Case CaseDeDepart = getCaseDepart(Map);
+	public void algoBFS() {  
+		this.ListeCaseTraversable = initListChemin();
+		Case CaseDeDepart = map.get(392);
 		CaseDeDepart.setMarquage(true); 
-		file.addFirst(CaseDeDepart);		
-		while(file.size() != 0) { 
-			Case c = 	file.removeLast();
-			for(Case casevoisin : this.ListeCasesNonMarquer) {
-				if(casevoisin.getMarquage() == false) {
-					this.CoupleCase.put(casevoisin, c);
-					casevoisin.setMarquage(true);
-					file.addFirst(casevoisin);
+		file.addFirst(CaseDeDepart);
+		while(!file.isEmpty()) {
+			Case CasePere = file.removeLast();			
+			for(Case CaseFils : this.CaseVoisin(CasePere)) {
+				if(CaseFils.getMarquage() == false) {
+					CoupleCase.put(CaseFils, CasePere);
+					CaseFils.setMarquage(true);
+					file.addFirst(CaseFils);
 				}
-			}
+			}			
 		}
-		System.out.println(this.CoupleCase); 
-	}
-	
-	public boolean CheminMonstreCaseMarquer() {
-		for(int i = 0 ; i < ListeCaseTraversable.size(); i++) {
-			if(ListeCaseTraversable.get(i).getMarquage() == false)
-				return false;
-		}
-		return true;
 	}
 	
 	public HashMap<Case, Case> getCoupleCase() {
 		return this.CoupleCase;
 	}
-	
-	public Case getCaseDepart(ObservableList<Case> Map) {
-		for(int i = 0 ; i < Map.size(); i++) {
-			if(i == 29)
-				return Map.get(i);
+
+	public ArrayList<Case> CaseVoisin(Case c) {
+		ArrayList<Case> listCaseVoisine = new ArrayList<Case>();
+		int indiceCase = map.indexOf(c);
+		
+		Case CaseVoisine = map.get(indiceCase+1);
+		if(this.ListeCaseTraversable.contains(CaseVoisine)) 
+			listCaseVoisine.add(CaseVoisine);
+		
+		CaseVoisine = map.get(indiceCase-1);
+		if(this.ListeCaseTraversable.contains(CaseVoisine)) 
+			listCaseVoisine.add(CaseVoisine); 
+		
+		if (indiceCase <= 28*28-28) {
+			CaseVoisine = map.get(indiceCase+28);
+			if(this.ListeCaseTraversable.contains(CaseVoisine))
+				listCaseVoisine.add(CaseVoisine);	
 		}
-		return Map.get(Map.size() - 1);
+		
+		CaseVoisine = map.get(indiceCase-28);
+		if(this.ListeCaseTraversable.contains(CaseVoisine))
+			listCaseVoisine.add(CaseVoisine);
+		return listCaseVoisine; 
 	}
 	
-	public ArrayList<Case> getListeCasesNonMarquer() {
-		for(int i = 0 ; i < this.ListeCaseTraversable.size(); i++) {
-			if(this.ListeCaseTraversable.get(i).getMarquage() == false)
-				this.ListeCasesNonMarquer.add(this.ListeCasesNonMarquer.get(i));
-		}
-		return this.ListeCasesNonMarquer;
+	public Case getCasePere(Case c) { 
+		return this.CoupleCase.get(c); 
 	}
 }

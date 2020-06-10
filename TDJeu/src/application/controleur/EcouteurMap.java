@@ -27,7 +27,7 @@ public class EcouteurMap implements ListChangeListener<Case>  {
 
 		while (e.next()) {
 			if(e.wasReplaced()) {
-				img = choixTourelles(e.getFrom());
+				img = choixTourellesOuMine(e.getFrom());
 			}
 			terrain.getChildren().set(e.getFrom(), getImgWithRotation(img, e.getFrom()));
 		}	
@@ -58,12 +58,12 @@ public class EcouteurMap implements ListChangeListener<Case>  {
 			}
 		}
 		
-		ImageView img = choixTourelles(indice);
+		ImageView img = choixTourellesOuMine(indice);
 		img.setRotate(angle);
 		terrain.getChildren().set(indice, img);
 	}
 	
-	public ImageView choixTourelles(int indice) {
+	public ImageView choixTourellesOuMine(int indice) {
 		ImageView img = new ImageView("file:src/assets/BlockTour.png");
 		switch (jeu.getMap().getListe().get(indice).getId()) {
 		case 1:
@@ -74,6 +74,9 @@ public class EcouteurMap implements ListChangeListener<Case>  {
 			break;
 		case 3:
 			img = new ImageView("file:src/assets/tower3.png");
+			break;
+		case 51:
+			img = new ImageView("file:src/assets/mine.png");
 			break;
 		}
 		return img;

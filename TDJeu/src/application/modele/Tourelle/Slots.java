@@ -27,6 +27,9 @@ public class Slots {
 			case 3:
 				jeu.removeCredits(300);
 				break;
+			case 51:
+				jeu.removeCredits(500);
+				break;
 			default:
 				jeu.removeCredits(100);
 				break;

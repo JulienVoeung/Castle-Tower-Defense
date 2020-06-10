@@ -3,6 +3,7 @@ package application.modele.Monstre;
 import java.util.ArrayList;
 
 import application.config;
+import application.modele.Jeu;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -65,10 +66,17 @@ public class Vague {
 		return sizeListMonstre == 0 && sizeListMonstreStock == 0;
 	}
 	
-	public void attaqueEtMortDuMonstre(Monstre monstre) {
-		monstre.decrementerVie();
+	public void attaqueEtMortDuMonstre(Monstre monstre, double damage , Jeu jeu) {
+		monstre.decrementerVie(damage);
 		if (monstre.getPv() == 0) {
+			jeu.addCredits(25);
 			this.listMonstreEnJeu.remove(monstre);
+			if (monstre instanceof RoiPig) {
+				for (int i = 0; i < 2; i++) {
+					Monstre newMonstre = new Pig("Pig" + i, monstre.getX(), monstre.getY());
+					this.listMonstreEnJeu.add(newMonstre);
+				}
+			}
 		}
 	}
 }

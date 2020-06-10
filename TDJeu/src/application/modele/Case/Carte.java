@@ -93,6 +93,12 @@ public class Carte {
 			  case 401:
 				  b = new Facade();
 				    break;
+			  case 50:
+				  b = new EmplacementMine();
+				    break;
+			  case 51:
+				  b = new Mine();
+				    break;
 			  default:
 				  b = new Planche();
 			}
@@ -112,7 +118,7 @@ public class Carte {
 	}
 	
 	//Renvoie l'indice du block dans la liste observable 
-	public int Indice(int x , int y) {
-		return(int) (y/32)*28+(x/32);	
+	public int Indice(double x , double y) {
+		return ((int) (y/32)*28+ (int) (x/32));	
 	}
 }

@@ -1,31 +1,29 @@
 package application.modele.Monstre;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 public class Monstre {
 
-    private int vitesse;
     private int vie;
     private int gain;
     
-    private IntegerProperty x;
-    private IntegerProperty y;
-    private int deplacementy;
-    private int deplacementx;
+    private DoubleProperty x;
+    private DoubleProperty y;
+    private double deplacementy;
+    private double deplacementx;
     
     private String nom;
     
 
-    public Monstre(String nom, int vitesse, int vie, int gain, int x, int y) {
+    public Monstre(String nom, int vitesse, int vie, int gain, double x, double y) {
     	this.nom = nom;
-        this.vitesse = vitesse;
         this.vie = vie;
         this.setGain(gain);
-        this.x = new SimpleIntegerProperty(x);
-        this.y = new SimpleIntegerProperty(y);
-        this.deplacementx = 12;
-        this.deplacementy = 12;
+        this.x = new SimpleDoubleProperty(x);
+        this.y = new SimpleDoubleProperty(y);
+        this.deplacementx = vitesse;
+        this.deplacementy = vitesse;
     }
 
 	public int getGain() {
@@ -35,36 +33,32 @@ public class Monstre {
 	public void setGain(int gain) {
 		this.gain = gain;
 	}
-	
-    public int getVitesse() {
-        return this.vitesse;
-    }
 
     public int getPv() {
         return this.vie; 
     }
 
-    public IntegerProperty getXProperty() {
+    public DoubleProperty getXProperty() {
         return this.x;
     }
 
-    public int getX() {
+    public double getX() {
         return this.x.getValue();
     }
 
-    public void setXProperty(int x) {
+    public void setXProperty(double x) {
         this.x.set(x);
     }
 
-    public IntegerProperty getYProperty() {
+    public DoubleProperty getYProperty() {
         return this.y;
     }
 
-    public int getY() {
+    public double getY() {
         return this.y.getValue();
     }
 
-    public void setYProperty(int y) {
+    public void setYProperty(double y) {
         this.y.set(y);
     }
 
@@ -88,9 +82,11 @@ public class Monstre {
     	return "Nom : "+ this.nom +"x : "+ this.getX() + " y : " + this.getY();
     }
     
-    public void decrementerVie() {
-    	if (this.vie > 0) {
-    		this.vie -= 1;
+    public void decrementerVie(double damage) {
+    	if (this.vie - damage > 0) {
+    		this.vie -= damage;
+		} else {
+			this.vie = 0;
 		}
     }
 }
