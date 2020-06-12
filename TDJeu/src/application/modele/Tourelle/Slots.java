@@ -18,22 +18,9 @@ public class Slots {
 	/***
 	 * Retrait de crédits 
 	 */
-	public void achatBoutique(int slot) throws CreditException {
+	public void achatTourelleBoutique(Tourelle tourelle) throws CreditException {
 		try {
-			switch (slot) {
-			case 2:
-				jeu.removeCredits(200);
-				break;
-			case 3:
-				jeu.removeCredits(300);
-				break;
-			case 51:
-				jeu.removeCredits(500);
-				break;
-			default:
-				jeu.removeCredits(100);
-				break;
-			}
+			jeu.removeCredits(tourelle.getPrix());
 		} catch (CreditException e) {
 			Alert alerte = new Alert(AlertType.ERROR);
 			alerte.setContentText("Crédits insuffisants");
@@ -42,4 +29,20 @@ public class Slots {
 			throw new CreditException();
 		}
 	}
+	
+	/***
+	 * Retrait de crédits 
+	 */
+	public void achatMineBoutique() throws CreditException {
+		try {
+			jeu.removeCredits(500);
+		} catch (CreditException e) {
+			Alert alerte = new Alert(AlertType.ERROR);
+			alerte.setContentText("Crédits insuffisants");
+			alerte.setHeaderText(null);
+			alerte.showAndWait();
+			throw new CreditException();
+		}
+	}
+	
 }

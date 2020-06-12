@@ -18,8 +18,7 @@ public class DeplacementBFS {
 		this.ListeCaseTraversable = new ArrayList<Case>();
 		this.file = new LinkedList<Case>();
 		this.CoupleCase = new HashMap<Case, Case>();
-		this.map = Map; 
-		
+		this.map = Map;
 	} 
 	
 	public ArrayList<Case> initListChemin() {

@@ -66,17 +66,26 @@ public class Vague {
 		return sizeListMonstre == 0 && sizeListMonstreStock == 0;
 	}
 	
-	public void attaqueEtMortDuMonstre(Monstre monstre, double damage , Jeu jeu) {
-		monstre.decrementerVie(damage);
-		if (monstre.getPv() == 0) {
-			jeu.addCredits(25);
-			this.listMonstreEnJeu.remove(monstre);
-			if (monstre instanceof RoiPig) {
-				for (int i = 0; i < 2; i++) {
-					Monstre newMonstre = new Pig("Pig" + i, monstre.getX(), monstre.getY());
-					this.listMonstreEnJeu.add(newMonstre);
+	 public void gainFinVague(Jeu jeu) {
+    	if (isFinished()) {
+    		jeu.addCredits(250);
+		}
+	}
+	
+	 public void mortMonstre() {
+		ArrayList<Monstre> monstresEnJeu = new ArrayList<Monstre>();
+		monstresEnJeu.addAll(this.listMonstreEnJeu);
+		for(Monstre m : monstresEnJeu) {
+			if (m.getPv() == 0) {
+				this.listMonstreEnJeu.remove(m);
+				if (m instanceof RoiPig) {
+					for (int i = 0; i < 2; i++) {
+						Monstre newMonstre = new Pig("Pig" + i, m.getX(), m.getY());	
+						this.listMonstreEnJeu.add(newMonstre);
+					}
 				}
 			}
+			
 		}
 	}
 }

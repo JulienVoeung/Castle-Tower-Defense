@@ -121,4 +121,14 @@ public class Carte {
 	public int Indice(double x , double y) {
 		return ((int) (y/32)*28+ (int) (x/32));	
 	}
+	
+	//Renvoie l'indice du block dans la liste observable 
+	public int coorXByIndice(int indice) {
+		return indice%28*32;	
+	}
+		
+	//Renvoie l'indice du block dans la liste observable 
+	public int coorYByIndice(int indice) {
+		return indice/28*32;
+	}
 }

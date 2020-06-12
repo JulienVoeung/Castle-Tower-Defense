@@ -122,9 +122,8 @@ public class JeuControleur implements Initializable {
 		// Game loop
 		initLoop();
 		gameLoop.play();
-		
-		
-		
+		System.out.println(jeu.getMap().Indice(403, 240));
+
 		//Bind & Listener
 		creditId.textProperty().bind(jeu.getCreditsProperty().asString());
 		vagueId.textProperty().bind(jeu.getVague().getNiveau().asString());
@@ -140,17 +139,13 @@ public class JeuControleur implements Initializable {
 	 */
     @FXML
     void dbProchaineVague(MouseEvent event) {
-    	if (jeu.getVague().isFinished() && jeu.getVie().getValue() > 0 ) {
-			jeu.getVague().incrementerNiveau();
-			gainFinVague();
+    	if (this.jeu.getVague().isFinished() && this.jeu.getVie().getValue() > 0 ) {
+			this.jeu.getVague().incrementerNiveau();
+			this.jeu.getVague().gainFinVague(this.jeu);
 		}
     }
     
-    public void gainFinVague() {
-    	if (jeu.getVague().getNiveau().getValue() >= 2) {
-    		jeu.addCredits(250);
-		}
-	}
+   
 	
 		
 	/***
@@ -183,7 +178,7 @@ public class JeuControleur implements Initializable {
     		Tourelle tourelle = new Tourelle(nom, tourelleId, prix, degats, cooldown, range, this.jeu);
     		slot = new Slots(jeu);
         	try {
-        		slot.achatBoutique(tourelleId);
+        		slot.achatTourelleBoutique(tourelle);
             	selectedTourelle = tourelle;
         	} catch (CreditException e) {}
     	}
@@ -194,7 +189,7 @@ public class JeuControleur implements Initializable {
     		Mine mine = new Mine();
     		slot = new Slots(jeu);
         	try {
-        		slot.achatBoutique(51);
+        		slot.achatMineBoutique();
         		selectedMine = mine;
         	} catch (CreditException e) {}
     	}
@@ -318,7 +313,7 @@ public class JeuControleur implements Initializable {
 				(ev -> {
 					if (temps % 2 == 0) {
 						jeu.getVague().spawnMonstres();
-						jeu.rotationEtAttaqueDesTourelles(ecouteurMap);
+						jeu.rotationEtAttaqueDesTourelles(ecouteurMap, this.parcour);
 						jeu.gainCredit();
 						jeu.deplaceMonstre();
 					}
@@ -326,6 +321,7 @@ public class JeuControleur implements Initializable {
 				}));
 		gameLoop.getKeyFrames().add(frames);
 	}
+	
 }
 
 

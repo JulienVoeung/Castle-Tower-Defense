@@ -10,8 +10,10 @@ public class Monstre {
     
     private DoubleProperty x;
     private DoubleProperty y;
-    private double deplacementy;
-    private double deplacementx;
+    private int currentDirection;
+    private double vitesse;
+    private int cooldownVitesse;
+    private double defaultVitesse;
     
     private String nom;
     
@@ -22,8 +24,10 @@ public class Monstre {
         this.setGain(gain);
         this.x = new SimpleDoubleProperty(x);
         this.y = new SimpleDoubleProperty(y);
-        this.deplacementx = vitesse;
-        this.deplacementy = vitesse;
+        this.vitesse = vitesse;
+        this.defaultVitesse = vitesse;
+        this.currentDirection = 4;
+        this.cooldownVitesse = 0;
     }
 
 	public int getGain() {
@@ -61,21 +65,30 @@ public class Monstre {
     public void setYProperty(double y) {
         this.y.set(y);
     }
-
-    public void deplacerGauche() {
-        this.setXProperty(-this.deplacementx + this.getX());       
+    
+    public int getCurrentDirection() {
+        return this.currentDirection;
     }
-
-    public void deplacerDroite() {
-        this.setXProperty(this.deplacementx + this.getX());
+    
+    public void setCurrentDirection(int direction) {
+    	this.currentDirection = direction;
     }
-
-    public void deplacerBas() {
-        this.setYProperty(this.deplacementy + this.getY());
-    }
-
-    public void deplacerHaut() {
-        this.setYProperty(-this.deplacementy + this.getY());
+    
+    public void deplacement(int direction) {
+    	switch (direction) {
+		case 1:
+			this.setXProperty(-this.vitesse + this.getX()); 
+			break;
+		case 2:
+			this.setXProperty(this.vitesse + this.getX());
+			break;
+		case 3:
+			this.setYProperty(this.vitesse + this.getY());
+			break;
+		case 4:
+			this.setYProperty(-this.vitesse + this.getY());
+			break;
+		}
     }
     
     public String toString() {
@@ -89,4 +102,24 @@ public class Monstre {
 			this.vie = 0;
 		}
     }
+    
+    public void decrementerVitesse(int Slow) {
+    	this.vitesse -= Slow;
+    	this.cooldownVitesse = 5;
+    }
+    
+    public void decrementeCooldownVitesse() {
+    	if (this.cooldownVitesse > 0) {
+        	this.cooldownVitesse--;
+    	}
+    }
+    
+    public int getCooldownVitesse() {
+    	return this.cooldownVitesse;
+    }
+    
+    public void resetVitesse() {
+    	this.vitesse = this.defaultVitesse;
+    }
+    
 }
