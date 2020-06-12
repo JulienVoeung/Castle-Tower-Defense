@@ -234,7 +234,9 @@ public class Jeu {
 		for (int i = 0; i < this.vague.getListMonstre().size(); i++) {
 			Monstre m = this.vague.getListMonstre().get(i);
 			Case c = this.map.getListe().get((this.map.Indice(m.getX(), m.getY())));
-			
+
+			System.out.println(m.getX());
+			System.out.println(m.getY());
 			gestionVitesseMonstre(m);
 			int indiceCasePere = this.map.getListe().indexOf(this.bfs.getCasePere(c));
 			int indiceCaseSuivante = this.map.Indice(m.getX(), m.getY());

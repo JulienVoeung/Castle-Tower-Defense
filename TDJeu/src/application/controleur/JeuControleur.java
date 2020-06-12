@@ -119,6 +119,7 @@ public class JeuControleur implements Initializable {
 		terrain.setPrefWidth(28 * 32);
 		terrain.setPrefHeight(28 * 32);
 		
+		
 		// Game loop
 		initLoop();
 		gameLoop.play();

@@ -15,9 +15,9 @@ public class config {
 	
 	
 	
-	public static final int CASE_END_X1 = 24;
-	public static final int CASE_END_X2 = 20;
-	public static final int CASE_END_Y = 456;
+	public static final int CASE_END_X1 = 26;
+	public static final int CASE_END_X2 = 30;
+	public static final int CASE_END_Y = 448;
 
 	public static final int vieInitiale = 4;
 	
@@ -33,16 +33,17 @@ public class config {
 		ArrayList<Monstre> monstres = new ArrayList<>();
 		switch (niveau) {
 		case 1:
-			Monstre RoiPig = new RoiPig("Roi Pig", CASE_X, CASE_Y);
-			monstres.add(RoiPig);	
+			for (int i = 0; i < 5; i++) {
+				Monstre pig = new Pig("Pig " + i + "G", CASE_X, CASE_Y);
+				Monstre pig2 = new Pig("Pig " + i + "D", CASE_2_X, CASE_2_Y);
+				monstres.add(pig);
+				monstres.add(pig2);
+			}
+				
 			break;
 		case 2:
-			for (int i = 0; i < 1; i++) {
-				Monstre pig = new Pig("Pig " + i + "G", CASE_X, CASE_Y);
-				//Monstre pig2 = new Pig("Pig " + i + "D", CASE_2_X, CASE_2_Y);
-				monstres.add(pig);
-				//monstres.add(pig2);
-			}	
+			Monstre RoiPig = new RoiPig("Roi Pig", CASE_X, CASE_Y);
+			monstres.add(RoiPig);
 			break;
 		case 3:
 			break;
